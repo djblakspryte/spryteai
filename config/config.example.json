@@ -1,0 +1,880 @@
+{
+  "guild_id": 0,
+  "emoji_guild_ids": [
+    0
+  ],
+  "branding": {
+    "name": "SpryteAI",
+    "creator": "DJ BlakSpryte"
+  },
+  "bot": {
+    "token": "",
+    "prefix": "!",
+    "status": "your commands!",
+    "log_level": "INFO",
+    "webhook_url": "",
+    "intents": {
+      "messages": true,
+      "message_content": true,
+      "guilds": true,
+      "members": true,
+      "bans": true,
+      "reactions": true,
+      "typing": true,
+      "presences": false
+    },
+    "case_insensitive": true,
+    "sync_commands": true,
+    "sync_on_cog_reload": true
+  },
+  "emoji": {
+    "yes": 0,
+    "no": 0
+  },
+  "roles": {
+    "staff": 0,
+    "trial_mod": 0,
+    "chat_mod": 0,
+    "muted": 0,
+    "restricted": 0,
+    "vip": 0,
+    "nitro_booster": 0
+  },
+  "categories": {
+    "tickets": 0,
+    "moderation": 0,
+    "logs": 0,
+    "development": 0
+  },
+  "channels": {
+    "public": {
+      "questions_and_help": 0
+    },
+    "mod": {
+      "moderation": 0
+    },
+    "logs": {
+      "mute_log": 0,
+      "ticket_log": 0,
+      "nitro_log": 0
+    },
+    "server": {
+      "tickets": 0
+    },
+    "starboard": {
+      "star_limit": 0,
+      "channel_id": 0,
+      "blacklisted": [
+        0
+      ]
+    }
+  },
+  "reddit": {
+    "subreddit": "snackbox",
+    "channel": 0,
+    "client_id": "",
+    "client_secret": "",
+    "user_agent": "Chiya:v1.0.0 (for /r/snackbox)"
+  },
+  "database": {
+    "database": "spryteai_data",
+    "host": "localhost",
+    "user": "postgres",
+    "password": "",
+    "pool_size": 10,
+    "legacy_database": "discord_data"
+  },
+  "privatebin": {
+    "url": "https://privatebin.net"
+  },
+  "timeout_limit": 3600,
+  "pokecord": {
+    "spawn_channel_id": 0,
+    "contributor_role_id": 0,
+    "exp_cooldown": 30,
+    "embed_footer": "Powered by SpryteAI",
+    "max_pokemon_id": 1025,
+    "spawn_expire_seconds": 45,
+    "legendary_roll": 300,
+    "spawn_min_seconds": 45,
+    "spawn_max_seconds": 120,
+    "api_cache_ttl": 21600,
+    "api_cache_entries": 2000,
+    "image_cache_ttl": 3600,
+    "image_cache_entries": 128,
+    "rarity_weights": {
+      "common": 60,
+      "uncommon": 25,
+      "rare": 10,
+      "epic": 4,
+      "legendary": 0.8,
+      "mythical": 0.2
+    },
+    "shiny_roll": 512
+  },
+  "community": {
+    "categories": {
+      "start_here": 0,
+      "blakspryte_live": 0,
+      "community": 0,
+      "pokemon_league": 0,
+      "gaming": 0,
+      "dj_blakspryte": 0,
+      "supporters": 0,
+      "staff": 0
+    },
+    "channels": {
+      "welcome": 0,
+      "rules": 0,
+      "announcements": 0,
+      "roles": 0,
+      "stream_schedule": 0,
+      "faq": 0,
+      "live_now": 0,
+      "stream_chat": 0,
+      "clips_and_highlights": 0,
+      "content_drops": 0,
+      "stream_suggestions": 0,
+      "what_should_i_play": 0,
+      "stream_lounge": 0,
+      "watch_party": 0,
+      "general": 0,
+      "introductions": 0,
+      "memes": 0,
+      "media": 0,
+      "polls": 0,
+      "bot_commands": 0,
+      "general_voice": 0,
+      "chill_lounge": 0,
+      "afk": 0,
+      "pokemon_spawns": 0,
+      "pokemon_lounge": 0,
+      "battles_and_trades": 0,
+      "gym_challenge": 0,
+      "badges_and_flex": 0,
+      "pokemon_help": 0,
+      "pokemon_center": 0,
+      "battle_stadium": 0,
+      "gaming_general": 0,
+      "the_isle": 0,
+      "current_game": 0,
+      "looking_for_group": 0,
+      "game_clips": 0,
+      "squad_1": 0,
+      "squad_2": 0,
+      "gaming_lounge": 0,
+      "dj_chat": 0,
+      "now_playing": 0,
+      "song_requests": 0,
+      "mixes_and_remixes": 0,
+      "gear_and_setup": 0,
+      "music_discovery": 0,
+      "listening_room": 0,
+      "dj_booth": 0,
+      "subscriber_lounge": 0,
+      "vip_lounge": 0,
+      "booster_lounge": 0,
+      "behind_the_scenes": 0,
+      "staff_chat": 0,
+      "reports": 0,
+      "mod_log": 0,
+      "bot_log": 0,
+      "bot_testing": 0,
+      "content_planning": 0,
+      "staff": 0
+    },
+    "roles": {
+      "live_alerts": 0,
+      "dj_alerts": 0,
+      "gaming_alerts": 0,
+      "pokemon_alerts": 0,
+      "pokemon_trainer": 0,
+      "the_isle": 0,
+      "music_dj": 0,
+      "admin": 0,
+      "moderator": 0,
+      "staff": 0,
+      "vip": 0,
+      "subscriber": 0,
+      "server_booster": 0
+    },
+    "roles_channel_key": "roles",
+    "live_channel_key": "live_now",
+    "pokemon_spawn_channel_key": "pokemon_spawns",
+    "status_role_keys": [
+      "live_alerts",
+      "dj_alerts",
+      "gaming_alerts",
+      "pokemon_alerts",
+      "pokemon_trainer",
+      "music_dj"
+    ],
+    "staff_access": {
+      "top_level_role_keys": [
+        "staff",
+        "trial_mod",
+        "chat_mod"
+      ],
+      "role_names": [
+        "Admin",
+        "Administrator",
+        "Moderator",
+        "Staff",
+        "👑 Admin",
+        "🛡️ Moderator",
+        "🧰 Staff"
+      ],
+      "community_role_keys": [
+        "admin",
+        "moderator",
+        "staff"
+      ]
+    },
+    "preserve": {
+      "top_level_role_keys": [
+        "staff",
+        "trial_mod",
+        "chat_mod",
+        "muted",
+        "restricted",
+        "vip",
+        "nitro_booster"
+      ],
+      "role_names": [
+        "DJ BlakSpryte",
+        "Admin",
+        "Administrator",
+        "Moderator",
+        "Staff",
+        "VIP",
+        "Subscriber",
+        "💎 VIP",
+        "⭐ Subscriber",
+        "👑 Admin",
+        "🛡️ Moderator",
+        "🧰 Staff"
+      ]
+    },
+    "self_role_groups": {
+      "notifications": {
+        "label": "Notifications",
+        "emoji": "🔔"
+      },
+      "interests": {
+        "label": "Interests",
+        "emoji": "🎮"
+      }
+    },
+    "onboarding_title": "Choose your community roles",
+    "onboarding_description": "Use the menus below to choose what you want to be notified about and which parts of the community you're into. You can change these whenever you want.",
+    "onboarding_footer": "SpryteAI Community Onboarding",
+    "role_definitions": {
+      "admin": {
+        "name": "👑 Admin",
+        "aliases": [
+          "Admin",
+          "Administrator"
+        ],
+        "description": "Server administrators with full Discord administrative access.",
+        "self_assignable": false,
+        "create": true,
+        "preserve": true,
+        "permissions": [
+          "administrator"
+        ]
+      },
+      "moderator": {
+        "name": "🛡️ Moderator",
+        "aliases": [
+          "Moderator",
+          "Mod"
+        ],
+        "description": "Community moderators with moderation permissions and access to staff areas.",
+        "self_assignable": false,
+        "create": true,
+        "preserve": true,
+        "permissions": [
+          "view_audit_log",
+          "manage_messages",
+          "manage_threads",
+          "moderate_members",
+          "kick_members",
+          "ban_members",
+          "manage_nicknames"
+        ]
+      },
+      "staff": {
+        "name": "🧰 Staff",
+        "aliases": [
+          "Staff"
+        ],
+        "description": "Staff access role for private staff channels.",
+        "self_assignable": false,
+        "create": true,
+        "preserve": true
+      },
+      "live_alerts": {
+        "name": "🔴 Live Alerts",
+        "emoji": "🔴",
+        "description": "Get notified whenever BlakSpryte goes live.",
+        "self_assignable": true,
+        "group": "notifications",
+        "create": true,
+        "preserve": true
+      },
+      "dj_alerts": {
+        "name": "🎧 DJ Alerts",
+        "emoji": "🎧",
+        "description": "Get notified for DJ sets and music streams.",
+        "self_assignable": true,
+        "group": "notifications",
+        "create": true,
+        "preserve": true
+      },
+      "gaming_alerts": {
+        "name": "🎮 Gaming Alerts",
+        "emoji": "🎮",
+        "description": "Get notified for gaming streams.",
+        "self_assignable": true,
+        "group": "notifications",
+        "create": true,
+        "preserve": true
+      },
+      "pokemon_alerts": {
+        "name": "🌿 Pokémon Alerts",
+        "emoji": "🌿",
+        "description": "Opt in to special Pokémon-related alerts.",
+        "self_assignable": true,
+        "group": "notifications",
+        "create": true,
+        "preserve": true
+      },
+      "pokemon_trainer": {
+        "name": "⚡ Pokémon Trainer",
+        "emoji": "⚡",
+        "description": "Access the Pokémon League and show that you play the server Pokémon game.",
+        "self_assignable": true,
+        "group": "interests",
+        "create": true,
+        "preserve": true
+      },
+      "the_isle": {
+        "name": "🦖 The Isle",
+        "emoji": "🦖",
+        "description": "Access The Isle community channel.",
+        "self_assignable": true,
+        "group": "interests",
+        "create": true,
+        "preserve": true
+      },
+      "music_dj": {
+        "name": "🎵 Music / DJ",
+        "emoji": "🎵",
+        "description": "Access the DJ BlakSpryte music community.",
+        "self_assignable": true,
+        "group": "interests",
+        "create": true,
+        "preserve": true
+      },
+      "vip": {
+        "name": "💎 VIP",
+        "create": true,
+        "preserve": true
+      },
+      "subscriber": {
+        "name": "⭐ Subscriber",
+        "create": true,
+        "preserve": true
+      },
+      "server_booster": {
+        "name": "Server Booster",
+        "create": false,
+        "preserve": true,
+        "builtin": "premium_subscriber"
+      }
+    },
+    "layout": [
+      {
+        "key": "start_here",
+        "name": "👋・START HERE",
+        "public": true,
+        "channels": [
+          {
+            "key": "welcome",
+            "name": "👋・welcome",
+            "type": "text",
+            "topic": "Start here: welcome information and how the community works.",
+            "read_only": true
+          },
+          {
+            "key": "rules",
+            "name": "📜・rules",
+            "type": "text",
+            "topic": "Community rules and expectations.",
+            "read_only": true
+          },
+          {
+            "key": "announcements",
+            "name": "📢・announcements",
+            "type": "text",
+            "topic": "Official community announcements.",
+            "read_only": true
+          },
+          {
+            "key": "roles",
+            "name": "🎭・roles",
+            "type": "text",
+            "topic": "Choose your notification and interest roles.",
+            "read_only": true
+          },
+          {
+            "key": "stream_schedule",
+            "name": "📅・stream-schedule",
+            "type": "text",
+            "topic": "Upcoming streams and scheduled community events.",
+            "read_only": true
+          },
+          {
+            "key": "faq",
+            "name": "❓・faq",
+            "type": "text",
+            "topic": "Frequently asked questions about the server, stream, and SpryteAI."
+          }
+        ]
+      },
+      {
+        "key": "blakspryte_live",
+        "name": "🔴・BLAKSPRYTE LIVE",
+        "public": true,
+        "channels": [
+          {
+            "key": "live_now",
+            "name": "🔴・live-now",
+            "type": "text",
+            "topic": "Live stream announcements from DJ BlakSpryte.",
+            "read_only": true
+          },
+          {
+            "key": "stream_chat",
+            "name": "💬・stream-chat",
+            "type": "text",
+            "topic": "Keep the stream conversation going before and after going live."
+          },
+          {
+            "key": "clips_and_highlights",
+            "name": "🎬・clips-and-highlights",
+            "type": "text",
+            "topic": "Share your favorite stream clips and highlights."
+          },
+          {
+            "key": "content_drops",
+            "name": "📹・content-drops",
+            "type": "text",
+            "topic": "New videos, posts, mixes, and content releases."
+          },
+          {
+            "key": "stream_suggestions",
+            "name": "💡・stream-suggestions",
+            "type": "text",
+            "topic": "Ideas and suggestions for future streams."
+          },
+          {
+            "key": "what_should_i_play",
+            "name": "🎮・what-should-i-play",
+            "type": "text",
+            "topic": "Vote and suggest what should be played next."
+          },
+          {
+            "key": "stream_lounge",
+            "name": "🔊・stream-lounge",
+            "type": "voice"
+          },
+          {
+            "key": "watch_party",
+            "name": "🍿・watch-party",
+            "type": "voice"
+          }
+        ]
+      },
+      {
+        "key": "community",
+        "name": "💬・COMMUNITY",
+        "public": true,
+        "channels": [
+          {
+            "key": "general",
+            "name": "💬・general",
+            "type": "text",
+            "topic": "General community conversation."
+          },
+          {
+            "key": "introductions",
+            "name": "👋・introductions",
+            "type": "text",
+            "topic": "Introduce yourself to the community."
+          },
+          {
+            "key": "memes",
+            "name": "😂・memes",
+            "type": "text",
+            "topic": "Memes and community humor."
+          },
+          {
+            "key": "media",
+            "name": "📸・media",
+            "type": "text",
+            "topic": "Share photos, videos, art, and other media."
+          },
+          {
+            "key": "polls",
+            "name": "🗳️・polls",
+            "type": "text",
+            "topic": "Community polls and votes."
+          },
+          {
+            "key": "bot_commands",
+            "name": "🤖・bot-commands",
+            "type": "text",
+            "topic": "Use SpryteAI utility and personal commands here."
+          },
+          {
+            "key": "general_voice",
+            "name": "🔊・general",
+            "type": "voice"
+          },
+          {
+            "key": "chill_lounge",
+            "name": "😌・chill-lounge",
+            "type": "voice"
+          },
+          {
+            "key": "afk",
+            "name": "💤・afk",
+            "type": "voice"
+          }
+        ]
+      },
+      {
+        "key": "pokemon_league",
+        "name": "⚡・POKÉMON LEAGUE",
+        "public": false,
+        "access_roles": [
+          "pokemon_trainer"
+        ],
+        "channels": [
+          {
+            "key": "pokemon_spawns",
+            "name": "🌿・pokemon-spawns",
+            "type": "text",
+            "topic": "Wild Pokémon appear here. Click the catch button and make your guess.",
+            "read_only": true
+          },
+          {
+            "key": "pokemon_lounge",
+            "name": "💬・pokemon-lounge",
+            "type": "text",
+            "topic": "Pokémon discussion, teams, collections, and strategy."
+          },
+          {
+            "key": "battles_and_trades",
+            "name": "⚔️・battles-and-trades",
+            "type": "text",
+            "topic": "Challenge trainers and arrange Pokémon trades."
+          },
+          {
+            "key": "gym_challenge",
+            "name": "🏟️・gym-challenge",
+            "type": "text",
+            "topic": "Challenge Gym Leaders and work through regional progression."
+          },
+          {
+            "key": "badges_and_flex",
+            "name": "🏆・badges-and-flex",
+            "type": "text",
+            "topic": "Show off badges, shinies, rare catches, and strong Pokémon."
+          },
+          {
+            "key": "pokemon_help",
+            "name": "📖・pokemon-help",
+            "type": "text",
+            "topic": "Pokémon bot help, mechanics, rarity, items, XP, and battle questions."
+          },
+          {
+            "key": "pokemon_center",
+            "name": "🏥・pokemon-center",
+            "type": "voice"
+          },
+          {
+            "key": "battle_stadium",
+            "name": "⚔️・battle-stadium",
+            "type": "voice"
+          }
+        ]
+      },
+      {
+        "key": "gaming",
+        "name": "🎮・GAMING",
+        "public": true,
+        "channels": [
+          {
+            "key": "gaming_general",
+            "name": "🎮・gaming-general",
+            "type": "text",
+            "topic": "Games, releases, builds, and gaming conversation."
+          },
+          {
+            "key": "the_isle",
+            "name": "🦖・the-isle",
+            "type": "text",
+            "topic": "The Isle discussion, groups, builds, and screenshots.",
+            "public": false,
+            "access_roles": [
+              "the_isle"
+            ]
+          },
+          {
+            "key": "current_game",
+            "name": "🔥・current-game",
+            "type": "text",
+            "topic": "The current featured game on stream."
+          },
+          {
+            "key": "looking_for_group",
+            "name": "👥・looking-for-group",
+            "type": "text",
+            "topic": "Find people to play with."
+          },
+          {
+            "key": "game_clips",
+            "name": "🎥・game-clips",
+            "type": "text",
+            "topic": "Share gaming clips and highlights."
+          },
+          {
+            "key": "squad_1",
+            "name": "1️⃣・squad-1",
+            "type": "voice"
+          },
+          {
+            "key": "squad_2",
+            "name": "2️⃣・squad-2",
+            "type": "voice"
+          },
+          {
+            "key": "gaming_lounge",
+            "name": "🎙️・gaming-lounge",
+            "type": "voice"
+          }
+        ]
+      },
+      {
+        "key": "dj_blakspryte",
+        "name": "🎧・DJ BLAKSPRYTE",
+        "public": false,
+        "access_roles": [
+          "music_dj"
+        ],
+        "channels": [
+          {
+            "key": "dj_chat",
+            "name": "🎧・dj-chat",
+            "type": "text",
+            "topic": "DJing, music, sets, and BlakSpryte discussion."
+          },
+          {
+            "key": "now_playing",
+            "name": "🎵・now-playing",
+            "type": "text",
+            "topic": "Tracks, sets, and what is currently playing."
+          },
+          {
+            "key": "song_requests",
+            "name": "🎶・song-requests",
+            "type": "text",
+            "topic": "Song and mix requests."
+          },
+          {
+            "key": "mixes_and_remixes",
+            "name": "🔥・mixes-and-remixes",
+            "type": "text",
+            "topic": "Mixes, mashups, remixes, and DJ releases."
+          },
+          {
+            "key": "gear_and_setup",
+            "name": "🎛️・gear-and-setup",
+            "type": "text",
+            "topic": "DJ, streaming, audio, OBS, and gear discussion."
+          },
+          {
+            "key": "music_discovery",
+            "name": "💿・music-discovery",
+            "type": "text",
+            "topic": "Share new tracks and music worth hearing."
+          },
+          {
+            "key": "listening_room",
+            "name": "🎶・listening-room",
+            "type": "voice"
+          },
+          {
+            "key": "dj_booth",
+            "name": "🎚️・dj-booth",
+            "type": "voice"
+          }
+        ]
+      },
+      {
+        "key": "supporters",
+        "name": "💎・SUPPORTERS",
+        "public": false,
+        "access_roles": [
+          "vip",
+          "subscriber",
+          "server_booster"
+        ],
+        "channels": [
+          {
+            "key": "subscriber_lounge",
+            "name": "⭐・subscriber-lounge",
+            "type": "text",
+            "topic": "Subscriber community lounge.",
+            "public": false,
+            "access_roles": [
+              "subscriber"
+            ]
+          },
+          {
+            "key": "vip_lounge",
+            "name": "💎・vip-lounge",
+            "type": "text",
+            "topic": "VIP community lounge.",
+            "public": false,
+            "access_roles": [
+              "vip"
+            ]
+          },
+          {
+            "key": "booster_lounge",
+            "name": "🚀・booster-lounge",
+            "type": "text",
+            "topic": "Server Booster community lounge.",
+            "public": false,
+            "access_roles": [
+              "server_booster"
+            ]
+          },
+          {
+            "key": "behind_the_scenes",
+            "name": "🎬・behind-the-scenes",
+            "type": "text",
+            "topic": "Behind-the-scenes content and supporter previews."
+          }
+        ]
+      },
+      {
+        "key": "staff",
+        "name": "🛡️・STAFF",
+        "public": false,
+        "staff_only": true,
+        "channels": [
+          {
+            "key": "staff_chat",
+            "name": "🛡️・staff-chat",
+            "type": "text",
+            "topic": "Private staff coordination."
+          },
+          {
+            "key": "reports",
+            "name": "🚨・reports",
+            "type": "text",
+            "topic": "Member reports and staff follow-up."
+          },
+          {
+            "key": "mod_log",
+            "name": "📋・mod-log",
+            "type": "text",
+            "topic": "Moderation actions and records."
+          },
+          {
+            "key": "bot_log",
+            "name": "🤖・bot-log",
+            "type": "text",
+            "topic": "SpryteAI operational logging and diagnostics."
+          },
+          {
+            "key": "bot_testing",
+            "name": "🧪・bot-testing",
+            "type": "text",
+            "topic": "Test commands and bot changes here."
+          },
+          {
+            "key": "content_planning",
+            "name": "📝・content-planning",
+            "type": "text",
+            "topic": "Stream, video, DJ, and community content planning."
+          },
+          {
+            "key": "staff_voice",
+            "name": "🔊・staff",
+            "type": "voice"
+          }
+        ]
+      }
+    ]
+  },
+  "streaming": {
+    "auto_presence": false,
+    "live_channel_id": 0,
+    "alert_role_keys": {
+      "default": [
+        "live_alerts"
+      ],
+      "gaming": [
+        "gaming_alerts"
+      ],
+      "dj_set": [
+        "dj_alerts"
+      ],
+      "just_chatting": [],
+      "special": []
+    }
+  },
+  "twitch": {
+    "enabled": true,
+    "client_id": "",
+    "client_secret": "",
+    "redirect_uri": "http://localhost:8765/twitch/callback",
+    "oauth_callback_host": "127.0.0.1",
+    "oauth_callback_port": 8765,
+    "token_store": "data/twitch_tokens.json",
+    "eventsub": {
+      "enabled": true,
+      "keepalive_timeout_seconds": 30
+    },
+    "discord": {
+      "announce_live": true,
+      "announce_offline": false,
+      "announce_follows": false,
+      "announce_subs": true,
+      "announce_cheers": true,
+      "announce_raids": true,
+      "announce_redemptions": false,
+      "event_channel_key": "stream_chat"
+    },
+    "chat": {
+      "enabled": true,
+      "prefix": "!",
+      "welcome_raids": true,
+      "thank_follows": true,
+      "thank_subs": true,
+      "thank_cheers": true,
+      "discord_url": "",
+      "responses": {
+        "discord": "",
+        "socials": "Follow DJ BlakSpryte across Twitch, YouTube, Facebook, Instagram, TikTok and X.",
+        "pokemon": "Join the Discord and become a Pokémon Trainer to catch, battle, trade, and challenge gyms with SpryteAI!"
+      },
+      "pokecord_image_links": true
+    }
+  }
+}

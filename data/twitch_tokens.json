@@ -1,0 +1,88 @@
+{
+  "bot": {
+    "access_token": "y3q3pn403lhvbeg64a1f6q4tbiq3xf",
+    "expires_in": 8105,
+    "login": "blakspryteai",
+    "refresh_token": "qglu24fex065tkte16p2otw268ldevi00v0rpon8kc6i72mnfa",
+    "scope": [
+      "user:bot",
+      "user:read:chat",
+      "user:write:chat"
+    ],
+    "scopes": [
+      "user:bot",
+      "user:read:chat",
+      "user:write:chat"
+    ],
+    "token_type": "bearer",
+    "user_id": "1539599345"
+  },
+  "broadcaster": {
+    "access_token": "nmv9285fzhoc6o30a6hwcg9ukdwmei",
+    "expires_in": 13961,
+    "login": "djblakspryte",
+    "refresh_token": "99orcu0ztgbzn2afg9khwndhkk0gj7jiy4ch6hmzj1150b1qqa",
+    "scope": [
+      "bits:read",
+      "channel:bot",
+      "channel:manage:broadcast",
+      "channel:manage:polls",
+      "channel:manage:redemptions",
+      "channel:read:subscriptions",
+      "clips:edit",
+      "moderator:manage:announcements",
+      "moderator:manage:banned_users",
+      "moderator:manage:shoutouts",
+      "moderator:read:followers"
+    ],
+    "scopes": [
+      "bits:read",
+      "channel:bot",
+      "channel:manage:broadcast",
+      "channel:manage:polls",
+      "channel:manage:redemptions",
+      "channel:read:subscriptions",
+      "clips:edit",
+      "moderator:manage:announcements",
+      "moderator:manage:banned_users",
+      "moderator:manage:shoutouts",
+      "moderator:read:followers"
+    ],
+    "token_type": "bearer",
+    "user_id": "881610827"
+  },
+  "broadcaster:1153884562393419806": {
+    "access_token": "z8vpx7cxx33yw9f2it6f4yfj5u1zic",
+    "expires_in": 13265,
+    "login": "djblakspryte",
+    "refresh_token": "99orcu0ztgbzn2afg9khwndhkk0gj7jiy4ch6hmzj1150b1qqa",
+    "scope": [
+      "bits:read",
+      "channel:bot",
+      "channel:manage:broadcast",
+      "channel:manage:polls",
+      "channel:manage:redemptions",
+      "channel:read:subscriptions",
+      "clips:edit",
+      "moderator:manage:announcements",
+      "moderator:manage:banned_users",
+      "moderator:manage:shoutouts",
+      "moderator:read:followers"
+    ],
+    "scopes": [
+      "bits:read",
+      "channel:bot",
+      "channel:manage:broadcast",
+      "channel:manage:polls",
+      "channel:manage:redemptions",
+      "channel:read:subscriptions",
+      "clips:edit",
+      "moderator:manage:announcements",
+      "moderator:manage:banned_users",
+      "moderator:manage:shoutouts",
+      "moderator:read:followers"
+    ],
+    "token_type": "bearer",
+    "user_id": "881610827"
+  }
+}
