@@ -2942,6 +2942,12 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
         owner_id = int(_user.id)
         guild_id = int(guild.id)
 
+        # Existing guild members do not emit on_member_join when SpryteAI is
+        # migrated to a new host/database. Ensure the legacy users row exists
+        # before the catch transaction; get_player_postgresData() creates it
+        # when missing and also confirms the community/player identity.
+        await db.get_player_postgresData(_user, guild)
+
         # UID is assigned inside the transaction. No external API calls should
         # be held open while a PostgreSQL row lock is active.
         pokeData = await build_pokemon_record(self.api, 0, value, owner_id)
@@ -4235,6 +4241,9 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
     @app_commands.describe(item="Medicine, berry, or evolution item to purchase")
     async def buy(self, interaction: discord.Interaction, item: str):
         ctx = await self._slash_context(interaction)
+        if self.spawn_channel_id and ctx.channel.id != self.spawn_channel_id:
+            await ctx.send(f"Please use <#{self.spawn_channel_id}> for this command")
+            return
 
         item_name = _canonical_item_name(item)
         catalog = {name: int(cost) for name, cost in (self._store_cache[1] if self._store_cache else _store_fallback_rows())}
