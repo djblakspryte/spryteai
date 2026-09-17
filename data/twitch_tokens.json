@@ -1,7 +1,7 @@
 {
   "bot": {
-    "access_token": "y3q3pn403lhvbeg64a1f6q4tbiq3xf",
-    "expires_in": 8105,
+    "access_token": "zg12dxcz29j8s92gwq4yjgnsy3nsvy",
+    "expires_in": 12528,
     "login": "blakspryteai",
     "refresh_token": "qglu24fex065tkte16p2otw268ldevi00v0rpon8kc6i72mnfa",
     "scope": [
@@ -52,8 +52,8 @@
     "user_id": "881610827"
   },
   "broadcaster:1153884562393419806": {
-    "access_token": "z8vpx7cxx33yw9f2it6f4yfj5u1zic",
-    "expires_in": 13265,
+    "access_token": "qs7pllvznoe3z90jkp1uulldmc9zgw",
+    "expires_in": 14562,
     "login": "djblakspryte",
     "refresh_token": "99orcu0ztgbzn2afg9khwndhkk0gj7jiy4ch6hmzj1150b1qqa",
     "scope": [

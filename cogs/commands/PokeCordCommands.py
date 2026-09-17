@@ -2425,9 +2425,12 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
         data = await self._artwork_bytes(pokemon, shiny=shiny)
         return discord.File(BytesIO(data), filename=filename)
 
-    async def _silhouette_file(self, pokemon: dict) -> discord.File:
+    async def _silhouette_bytes(self, pokemon: dict) -> bytes:
         data = await self._artwork_bytes(pokemon, shiny=False)
-        silhouette = await asyncio.to_thread(_render_png, data, silhouette=True)
+        return await asyncio.to_thread(_render_png, data, silhouette=True)
+
+    async def _silhouette_file(self, pokemon: dict) -> discord.File:
+        silhouette = await self._silhouette_bytes(pokemon)
         return discord.File(BytesIO(silhouette), filename="poke_image.png")
 
     @c.Cog.listener()
@@ -3091,6 +3094,21 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
                 )
             except discord.HTTPException:
                 log.exception("Unable to announce Twitch Pokémon catch in Discord")
+
+        # Broadcast the Twitch-side win as an internal event too. This lets the
+        # OBS browser overlay clear immediately regardless of which platform won
+        # the shared catch race.
+        self.bot.dispatch(
+            "pokecord_twitch_catch",
+            int(community_id),
+            {
+                "pokemon_name": str(caught.get("name") or "Pokémon"),
+                "rarity": rarity,
+                "shiny": bool(caught.get("shiny", False)),
+                "twitch_name": str(twitch_name),
+                "player_id": int(player_id),
+            },
+        )
         return f"🎉 @{twitch_name} caught {pretty}! {rarity}{shiny} · UID {saved['uid']}"
 
     async def twitch_summary(self, community_id: int, player_id: int, twitch_name: str) -> str:
@@ -4217,9 +4235,6 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
     @app_commands.describe(item="Medicine, berry, or evolution item to purchase")
     async def buy(self, interaction: discord.Interaction, item: str):
         ctx = await self._slash_context(interaction)
-        if self.spawn_channel_id and ctx.channel.id != self.spawn_channel_id:
-            await ctx.send(f"Please use <#{self.spawn_channel_id}> for this command")
-            return
 
         item_name = _canonical_item_name(item)
         catalog = {name: int(cost) for name, cost in (self._store_cache[1] if self._store_cache else _store_fallback_rows())}
@@ -4682,7 +4697,8 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
             return
 
         try:
-            file = await self._silhouette_file(pokemon)
+            silhouette_png = await self._silhouette_bytes(pokemon)
+            file = discord.File(BytesIO(silhouette_png), filename="poke_image.png")
         except (PokeAPIError, OSError) as exc:
             log.exception("Unable to render Pokecord spawn artwork: %s", exc)
             self.pokestore = None
@@ -4757,6 +4773,10 @@ class PokeCord(commands.GroupCog, group_name="pokemon", group_description="Catch
                 {
                     "expires_in": max(15, int(self._pokecord_cfg().get("spawn_expire_seconds", 180))),
                     "silhouette_url": silhouette_url,
+                    # The OBS overlay is served by SpryteAI itself, so pass the
+                    # already-rendered silhouette bytes in-process instead of
+                    # making OBS depend on a signed Discord CDN URL.
+                    "silhouette_png": silhouette_png,
                     "discord_message_id": sent_msg.id,
                 },
             )

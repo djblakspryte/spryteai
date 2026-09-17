@@ -1,0 +1,30 @@
+SpryteAI Pokemon OBS Overlay
+============================
+
+Files in this package:
+- cogs/commands/PokeCordCommands.py
+- cogs/commands/TwitchCommands.py
+- database.py
+- utils/overlay.py
+
+Cloudflare Tunnel origin:
+  http://127.0.0.1:8080
+
+Public URL default:
+  https://overlay.spryteai.cc
+
+Optional environment variables:
+  OVERLAY_HOST=127.0.0.1
+  OVERLAY_PORT=8080
+  OVERLAY_PUBLIC_BASE_URL=https://overlay.spryteai.cc
+
+After copying the files:
+1. Stop any temporary test server still using port 8080.
+2. Restart SpryteAI. The overlay token table migration runs automatically.
+3. Run your existing Discord application-command sync command.
+4. Run /twitch overlay in the desired community.
+5. Copy the private URL into OBS as a Browser Source (recommended 600x600).
+6. Use /twitch overlay-reset if the URL/token is ever exposed.
+
+Health check:
+  https://overlay.spryteai.cc/health

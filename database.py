@@ -319,6 +319,15 @@ CREATE TABLE IF NOT EXISTS community_link_codes (
 );
 CREATE INDEX IF NOT EXISTS idx_community_link_codes_expiry ON community_link_codes(expires_at);
 
+CREATE TABLE IF NOT EXISTS community_overlay_tokens (
+    community_id BIGINT NOT NULL REFERENCES communities(community_id) ON DELETE CASCADE,
+    overlay_type TEXT NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    rotated_at TIMESTAMPTZ,
+    PRIMARY KEY (community_id, overlay_type)
+);
+
 CREATE TABLE IF NOT EXISTS community_config_history (
     history_id BIGSERIAL PRIMARY KEY,
     community_id BIGINT NOT NULL REFERENCES communities(community_id) ON DELETE CASCADE,
@@ -665,11 +674,24 @@ COMMENT ON VIEW pokecord_poke_data_scoped IS
 '''
 
 
+OVERLAY_TOKENS_MIGRATION_SQL = r'''
+CREATE TABLE IF NOT EXISTS community_overlay_tokens (
+    community_id BIGINT NOT NULL REFERENCES communities(community_id) ON DELETE CASCADE,
+    overlay_type TEXT NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    rotated_at TIMESTAMPTZ,
+    PRIMARY KEY (community_id, overlay_type)
+);
+'''
+
+
 MIGRATIONS: tuple[tuple[str, str], ...] = (
     ("2026-09-11-db-optimization-v1", OPTIMIZATION_MIGRATION_SQL),
     ("2026-09-11-pokecord-normalization-v2", NORMALIZE_POKECORD_MIGRATION_SQL),
     ("2026-09-12-multi-community-v3", MULTI_COMMUNITY_MIGRATION_SQL),
     ("2026-09-13-pokecord-evolution-v4", POKECORD_EVOLUTION_MIGRATION_SQL),
+    ("2026-09-13-overlay-tokens-v5", OVERLAY_TOKENS_MIGRATION_SQL),
 )
 
 
@@ -1150,6 +1172,73 @@ class Database:
                 )
         self.activate_community(cid)
         return int(player_id)
+
+    async def get_overlay_token(self, community_id: int, overlay_type: str = "pokemon") -> str | None:
+        value = await self.fetchval(
+            """
+            SELECT token
+            FROM community_overlay_tokens
+            WHERE community_id = $1 AND overlay_type = $2
+            """,
+            int(community_id),
+            str(overlay_type),
+        )
+        return str(value) if value is not None else None
+
+    async def get_or_create_overlay_token(
+        self, community_id: int, overlay_type: str = "pokemon"
+    ) -> str:
+        cid = int(community_id)
+        kind = str(overlay_type)
+        existing = await self.get_overlay_token(cid, kind)
+        if existing:
+            return existing
+
+        while True:
+            token = secrets.token_urlsafe(32)
+            try:
+                value = await self.fetchval(
+                    """
+                    INSERT INTO community_overlay_tokens (community_id, overlay_type, token)
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT (community_id, overlay_type) DO NOTHING
+                    RETURNING token
+                    """,
+                    cid,
+                    kind,
+                    token,
+                )
+                if value is not None:
+                    return str(value)
+                existing = await self.get_overlay_token(cid, kind)
+                if existing:
+                    return existing
+            except asyncpg.UniqueViolationError:
+                continue
+
+    async def rotate_overlay_token(
+        self, community_id: int, overlay_type: str = "pokemon"
+    ) -> str:
+        cid = int(community_id)
+        kind = str(overlay_type)
+        while True:
+            token = secrets.token_urlsafe(32)
+            try:
+                await self.execute(
+                    """
+                    INSERT INTO community_overlay_tokens (community_id, overlay_type, token, rotated_at)
+                    VALUES ($1, $2, $3, NOW())
+                    ON CONFLICT (community_id, overlay_type) DO UPDATE
+                    SET token = EXCLUDED.token,
+                        rotated_at = NOW()
+                    """,
+                    cid,
+                    kind,
+                    token,
+                )
+                return token
+            except asyncpg.UniqueViolationError:
+                continue
 
     async def create_twitch_link_code(
         self, guild: Any, discord_user: Any, ttl_seconds: int = 600

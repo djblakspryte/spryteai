@@ -7,13 +7,13 @@ from collections import deque
 from datetime import datetime, timezone
 from typing import Literal
 
-import aiohttp
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 from config import BASE_DIR, BRAND_NAME, config
 from services import db
+from utils.overlay import PokemonOverlayServer
 from utils.twitch import TwitchAPIError, TwitchManager
 
 log = logging.getLogger(__name__)
@@ -38,6 +38,7 @@ class TwitchCommands(commands.GroupCog, group_name="twitch", group_description="
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.manager = TwitchManager(base_dir=BASE_DIR, config=config, database=db, event_handler=self._handle_event)
+        self.overlay = PokemonOverlayServer(database=db, config=config)
         self._startup_task: asyncio.Task[None] | None = None
         self._last_live_event: dict[int, dict] = {}
         self._chat_send_lock = asyncio.Lock()
@@ -45,11 +46,23 @@ class TwitchCommands(commands.GroupCog, group_name="twitch", group_description="
         self._chat_channel_last_sent: dict[int, float] = {}
 
     async def cog_load(self) -> None:
+        try:
+            await self.overlay.start()
+        except OSError:
+            # Keep Twitch usable if the local overlay port is occupied (for
+            # example if the temporary `python -m http.server 8080` test is
+            # still running). The overlay command will report it as offline.
+            log.exception(
+                "Unable to start Pokémon overlay server on %s:%s",
+                self.overlay.host,
+                self.overlay.port,
+            )
         self._startup_task = asyncio.create_task(self.manager.start(), name="twitch-manager-start")
 
     async def cog_unload(self) -> None:
         if self._startup_task and not self._startup_task.done():
             self._startup_task.cancel()
+        await self.overlay.close()
         await self.manager.close()
 
     async def _ensure_started(self) -> None:
@@ -456,122 +469,38 @@ class TwitchCommands(commands.GroupCog, group_name="twitch", group_description="
         days = max(0, (datetime.now(timezone.utc) - followed).days)
         await self._send_chat(community_id, f"{name} has been following for {days:,} day{'s' if days != 1 else ''}! 💜", reply_to=reply_to)
 
-    async def _shorten_url(self, url: str) -> str:
-        """Shorten a long Twitch-facing URL with TinyURL's modern API.
-
-        TinyURL allows link creation through its Free plan. The official API
-        requires a bearer token, but avoids the preview/interstitial used by
-        TinyURL's deprecated unauthenticated endpoint. If shortening is not
-        configured or fails, return the original Discord URL so Pokécord
-        spawning is never interrupted.
-        """
-        original = str(url or "").strip()
-        if not original:
-            return ""
-
-        twitch_cfg = config.get("twitch", {}) if isinstance(config, dict) else {}
-        token = str(
-            os.getenv("TINYURL_TOKEN")
-            or (twitch_cfg.get("tinyurl_token") if isinstance(twitch_cfg, dict) else "")
-            or ""
-        ).strip()
-
-        if not token:
-            log.warning(
-                "TINYURL_TOKEN is not configured; using the original Pokecord silhouette URL"
-            )
-            return original
-
-        session = self.manager.session
-        if session is None or session.closed:
-            return original
-
-        try:
-            timeout = aiohttp.ClientTimeout(total=5)
-            async with session.post(
-                "https://api.tinyurl.com/create",
-                headers={
-                    "Authorization": f"Bearer {token}",
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "url": original,
-                    "domain": "tinyurl.com",
-                },
-                timeout=timeout,
-            ) as response:
-                try:
-                    payload = await response.json(content_type=None)
-                except (aiohttp.ContentTypeError, ValueError):
-                    body = (await response.text()).strip()
-                    log.warning(
-                        "Unable to shorten Pokecord silhouette URL with TinyURL "
-                        "(HTTP %s, non-JSON response): %s",
-                        response.status,
-                        body[:200],
-                    )
-                    return original
-
-                data = payload.get("data") if isinstance(payload, dict) else None
-                short_url = str(data.get("tiny_url") or "").strip() if isinstance(data, dict) else ""
-                if 200 <= response.status < 300 and short_url.startswith(("https://", "http://")):
-                    log.info("Shortened Pokecord silhouette URL with TinyURL: %s", short_url)
-                    return short_url
-
-                error = payload.get("errors") if isinstance(payload, dict) else payload
-                if isinstance(payload, dict) and not error:
-                    error = payload.get("message") or payload
-                log.warning(
-                    "Unable to shorten Pokecord silhouette URL with TinyURL (HTTP %s): %s",
-                    response.status,
-                    str(error)[:300],
-                )
-        except (aiohttp.ClientError, asyncio.TimeoutError):
-            log.exception("Unable to shorten Pokecord silhouette URL with TinyURL")
-
-        return original
-
     @commands.Cog.listener()
     async def on_pokecord_spawn(self, community_id: int, info: dict) -> None:
+        # OBS is driven by the same shared Pokécord event as Discord/Twitch.
+        # The silhouette is displayed by the browser overlay only; Twitch chat
+        # intentionally receives no image URL so the message stays clean.
+        await self.overlay.show_spawn(community_id, info)
+
         await self._ensure_started()
         if not (self.manager.broadcaster_id(community_id) and self.manager.bot_id):
             return
 
         seconds = int(info.get("expires_in") or 0)
         suffix = f" You have about {seconds}s." if seconds else ""
-        silhouette_url = str(info.get("silhouette_url") or "").strip()
-
-        # Send the spawn instruction and silhouette in one Twitch message.
-        # Sending them as two immediate messages can trip Twitch's per-channel
-        # chat rate limit and cause the URL message to receive HTTP 429.
         spawn_message = f"🌿 A wild Pokémon appeared! Use !catch <pokemon name>.{suffix}"
-
-        if silhouette_url:
-            short_url = await self._shorten_url(silhouette_url)
-            log.info(
-                "Including Pokecord silhouette URL in Twitch spawn message for community %s: %s",
-                community_id,
-                short_url,
-            )
-            spawn_message += f"\n🖼️ Silhouette: {short_url}"
-        else:
-            log.warning(
-                "Pokecord spawn for community %s did not include a usable silhouette URL",
-                community_id,
-            )
-
         await self._send_chat(community_id, spawn_message)
 
     @commands.Cog.listener()
     async def on_pokecord_discord_catch(self, community_id: int, info: dict) -> None:
-        """Tell Twitch when a Discord trainer wins the shared spawn."""
+        """Tell Twitch and OBS when a Discord trainer wins the shared spawn."""
+        name = str(info.get("discord_name") or "A Discord trainer")
+        pokemon = str(info.get("pokemon_name") or "Pokémon").replace("-", " ").title()
+        await self.overlay.show_result(
+            community_id,
+            outcome="caught",
+            pokemon_name=pokemon,
+            trainer_name=name,
+        )
+
         await self._ensure_started()
         if not (self.manager.broadcaster_id(community_id) and self.manager.bot_id):
             return
 
-        name = str(info.get("discord_name") or "A Discord trainer")
-        pokemon = str(info.get("pokemon_name") or "Pokémon").replace("-", " ").title()
         rarity = str(info.get("rarity") or "Common")
         shiny = " ✨SHINY" if bool(info.get("shiny")) else ""
         await self._send_chat(
@@ -581,17 +510,35 @@ class TwitchCommands(commands.GroupCog, group_name="twitch", group_description="
 
     @commands.Cog.listener()
     async def on_pokecord_escape(self, community_id: int, info: dict) -> None:
-        """Tell Twitch when nobody catches the shared spawn before it expires."""
+        """Tell Twitch and OBS when nobody catches the shared spawn before it expires."""
+        pokemon = str(info.get("pokemon_name") or "Pokémon").replace("-", " ").title()
+        await self.overlay.show_result(
+            community_id,
+            outcome="escaped",
+            pokemon_name=pokemon,
+        )
+
         await self._ensure_started()
         if not (self.manager.broadcaster_id(community_id) and self.manager.bot_id):
             return
 
-        pokemon = str(info.get("pokemon_name") or "Pokémon").replace("-", " ").title()
         rarity = str(info.get("rarity") or "Common")
         shiny = " ✨SHINY" if bool(info.get("shiny")) else ""
         await self._send_chat(
             community_id,
             f"💨 The wild {pokemon} escaped! {rarity}{shiny}. Another wild Pokémon will appear soon.",
+        )
+
+    @commands.Cog.listener()
+    async def on_pokecord_twitch_catch(self, community_id: int, info: dict) -> None:
+        """Clear the OBS spawn when a Twitch viewer wins the shared catch race."""
+        pokemon = str(info.get("pokemon_name") or "Pokémon").replace("-", " ").title()
+        name = str(info.get("twitch_name") or "A Twitch trainer")
+        await self.overlay.show_result(
+            community_id,
+            outcome="caught",
+            pokemon_name=pokemon,
+            trainer_name=name,
         )
 
     async def cog_app_command_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
@@ -792,6 +739,42 @@ class TwitchCommands(commands.GroupCog, group_name="twitch", group_description="
         if not target: await interaction.followup.send("Twitch user not found.", ephemeral=True); return
         await self.manager.require_api().unban_user(bid, str(target["id"]), account=account)
         await interaction.followup.send(f"Unbanned **{target['display_name']}**.", ephemeral=True)
+
+    @app_commands.command(name="overlay", description="Get this community's private OBS Pokémon Browser Source URL.")
+    async def overlay_url(self, interaction: discord.Interaction) -> None:
+        if not await self._manage_check(interaction):
+            return
+        ctx = await self._community_context(interaction)
+        if ctx is None:
+            return
+        cid, _ = ctx
+        token = await db.get_or_create_overlay_token(cid, "pokemon")
+        url = self.overlay.overlay_url(cid, token)
+        status = "online" if self.overlay.started else "offline on this SpryteAI instance"
+        await interaction.response.send_message(
+            "**Pokémon OBS Browser Source**\n"
+            f"{url}\n\n"
+            "Recommended size: **600 × 600**\n"
+            f"Overlay server: **{status}**\n\n"
+            "Keep this URL private. Anyone with it can view this community's overlay.",
+            ephemeral=True,
+        )
+
+    @app_commands.command(name="overlay-reset", description="Rotate this community's private OBS Pokémon overlay URL.")
+    async def overlay_reset(self, interaction: discord.Interaction) -> None:
+        if not await self._manage_check(interaction):
+            return
+        ctx = await self._community_context(interaction)
+        if ctx is None:
+            return
+        cid, _ = ctx
+        token = await db.rotate_overlay_token(cid, "pokemon")
+        url = self.overlay.overlay_url(cid, token)
+        await interaction.response.send_message(
+            "The old Pokémon overlay URL has been revoked. Replace the Browser Source URL with:\n"
+            f"{url}",
+            ephemeral=True,
+        )
 
     @app_commands.command(name="link", description="Link your Discord account to your Twitch account in this community.")
     async def link(self, interaction: discord.Interaction) -> None:
