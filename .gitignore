@@ -7,3 +7,5 @@ __pycache__/
 nohup.out
 .DS_Store
 assets/temp_card.png
+db/pokecordData/Images
+
